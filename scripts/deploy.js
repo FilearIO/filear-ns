@@ -1,10 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import { WarpFactory } from 'warp-contracts';
-import { DeployPlugin } from 'warp-contracts-plugin-deploy';
-
-import initialState from '../src/contracts/initial-state.json';
-import jwk from '../.secrets/jwk.json';
+const fs = require('fs');
+const path = require('path');
+const { WarpFactory } = require('warp-contracts');
+const { ArweaveSigner, DeployPlugin } = require('warp-contracts-plugin-deploy');
+const initialState = require('../src/contracts/initial-state.json');
+const jwk = require('../.secrets/jwk.json');
 
 (async () => {
   const warp = WarpFactory.forMainnet().use(new DeployPlugin());;
@@ -12,7 +11,7 @@ import jwk from '../.secrets/jwk.json';
 
   console.log('Deployment started');
   const { contractTxId } = await warp.deploy({
-    wallet: jwk,
+    wallet: new ArweaveSigner(jwk),
     initState: JSON.stringify(initialState),
     src: contractSrc,
     evaluationManifest: {

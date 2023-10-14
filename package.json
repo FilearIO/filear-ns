@@ -8,6 +8,7 @@
     "clean": "rimraf ./dist",
     "build-ts": "node scripts/build.js",
     "build": "pnpm run clean && pnpm run build-ts",
+    "deploy": "node scripts/deploy",
     "test": "jest"
   },
   "keywords": [],
