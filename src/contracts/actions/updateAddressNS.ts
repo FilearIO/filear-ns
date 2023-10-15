@@ -5,6 +5,16 @@ export const updateAddressNS = async (state: State, action: Action) => {
 
   const inputName = input.name?.trim()
 
+  if (inputName && inputName.length > 40) {
+    throw new ContractError(`the length of name must less than 40`)
+  }
+
+  const avatar = input.avatar?.trim()
+
+  if (avatar && avatar.length > 400) {
+    throw new ContractError(`the length of avatar must less than 400`)
+  }
+
   const tryGetRegistered =  await SmartWeave.kv.get(inputName);
   if (tryGetRegistered) {
     throw new ContractError(`name ${inputName} has already registered`)
@@ -17,7 +27,7 @@ export const updateAddressNS = async (state: State, action: Action) => {
     const newNS = {
       address: caller,
       name: inputName ? inputName : oldNS.name,
-      avatar: input.avatar ? input.avatar : oldNS.avatar,
+      avatar: avatar ? avatar : oldNS.avatar,
       lastModify: Date.now()
     }
     // Delete first and then assign
@@ -28,7 +38,7 @@ export const updateAddressNS = async (state: State, action: Action) => {
     const newNS = {
       address: caller,
       name: inputName ?? '',
-      avatar: input.avatar ?? '',
+      avatar: avatar ?? '',
       lastModify: Date.now()
     }
     await SmartWeave.kv.put(inputName, caller);

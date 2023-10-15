@@ -92,6 +92,14 @@ describe('Testing the Filear Name Service', () => {
     expect((nsInfo as NSData).name).toEqual(name);
   });
 
+  it('should show error when set name to "testtesttesttesttesttesttesttesttesttesttesttest"', async () => {
+    const name = 'testtesttesttesttesttesttesttesttesttesttesttest'
+
+    await expect(filearNS.writeInteraction({ function: 'updateAddressNS', name }, { strict: true })).rejects.toThrow(
+      `the length of name must less than 40`
+    );
+  });
+
   it('should properly update name to "testUpdate"', async () => {
     const name = 'testUpdate'
     await filearNS.writeInteraction({ function: 'updateAddressNS', name });

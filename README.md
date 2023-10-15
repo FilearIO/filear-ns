@@ -1,7 +1,7 @@
 # Filear Name Service
 
 ```
-The contract has been deployed in address: C7XN74A5Py87oM1D2wXOctxVesg32F6ehWyVtyiEWJk
+The contract has been deployed in address: bMvBaZWm9ry5Fum53YDA5E-FQjII0JWXiUqEBEKeNA4
 ```
 
 ### build
