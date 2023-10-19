@@ -143,4 +143,27 @@ describe('Testing the Filear Name Service', () => {
     expect((addrList as Record<string, any>).testUpdate).toEqual(owner);
     expect((addrList as Record<string, any>).test2).toEqual(user2);
   });
+
+  it(`test watchlist: `, async () => {
+    filearNS = warp.contract<State>(contractId).connect(user3Wallet);
+
+    await filearNS.writeInteraction({ function: 'addWatchlist', watchAddr: owner });
+    await filearNS.writeInteraction({ function: 'addWatchlist', watchAddr: user2 });
+
+    const { result: watchlist } = await filearNS.viewState({ function: 'getWatchlist' });
+  
+    expect((watchlist as string[]).join(',')).toEqual([`${owner}`, `${user2}`].join(','));
+   
+  });
+
+  it(`remove owner from watchlist`, async () => {
+    filearNS = warp.contract<State>(contractId).connect(user3Wallet);
+
+    await filearNS.writeInteraction({ function: 'removeWatchlist', watchAddr: owner });
+
+    const { result } = await filearNS.viewState({ function: 'getWatchlist' });
+    expect((result as Array<string>).join(',')).toEqual([`${user2}`].join(','));
+   
+  });
+
 });

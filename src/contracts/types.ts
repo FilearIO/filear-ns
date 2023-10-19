@@ -14,7 +14,14 @@ export interface State {
   evolve: null | string
 }
 
-export type ContractFunction = 'evolve' | 'getAddressListByNames' | 'getNSByAddress' | 'updateAddressNS'
+export type ContractFunction = 
+  'evolve' | 
+  'getAddressListByNames' | 
+  'getNSByAddress' | 
+  'updateAddressNS' |
+  'getWatchlist' |
+  'addWatchlist' | 
+  'removeWatchlist'
 
 export interface Input {
   function: ContractFunction
@@ -23,6 +30,7 @@ export interface Input {
   address?: Address
   avatar?: string
   value?: string
+  watchAddr?: string
 }
 
 export interface Action {

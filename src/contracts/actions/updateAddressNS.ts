@@ -1,4 +1,5 @@
 import type { State, Action } from '../types'
+import { getNameKey, getNSKey } from '../util'
 
 export const updateAddressNS = async (state: State, action: Action) => {
   const { caller, input } = action
@@ -15,12 +16,15 @@ export const updateAddressNS = async (state: State, action: Action) => {
     throw new ContractError(`the length of avatar must less than 400`)
   }
 
-  const tryGetRegistered =  await SmartWeave.kv.get(inputName);
+  const nameKey = getNameKey(inputName)
+  const nsKey = getNSKey(caller)
+
+  const tryGetRegistered =  await SmartWeave.kv.get(nameKey);
   if (tryGetRegistered) {
     throw new ContractError(`name ${inputName} has already registered`)
   }
 
-  const tryGetOldNS = await SmartWeave.kv.get(caller);
+  const tryGetOldNS = await SmartWeave.kv.get(nsKey);
   let oldNS = tryGetOldNS ? JSON.parse(tryGetOldNS) : undefined
 
   if (oldNS) {
@@ -32,8 +36,8 @@ export const updateAddressNS = async (state: State, action: Action) => {
     }
     // Delete first and then assign
     await SmartWeave.kv.del(oldNS.name);
-    await SmartWeave.kv.put(inputName, caller);
-    await SmartWeave.kv.put(caller, JSON.stringify(newNS));
+    await SmartWeave.kv.put(nameKey, caller);
+    await SmartWeave.kv.put(nsKey, JSON.stringify(newNS));
   } else {
     const newNS = {
       address: caller,
@@ -41,8 +45,8 @@ export const updateAddressNS = async (state: State, action: Action) => {
       avatar: avatar ?? '',
       lastModify: Date.now()
     }
-    await SmartWeave.kv.put(inputName, caller);
-    await SmartWeave.kv.put(caller, JSON.stringify(newNS));
+    await SmartWeave.kv.put(nameKey, caller);
+    await SmartWeave.kv.put(nsKey, JSON.stringify(newNS));
   }
   return { result: true }
 }
